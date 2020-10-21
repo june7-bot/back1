@@ -1,6 +1,7 @@
-package zen.zen;
+package zen.zen.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import zen.zen.entity.User;
 
 import java.util.Optional;
 

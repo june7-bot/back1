@@ -1,4 +1,4 @@
-package zen.zen;
+package zen.zen.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,22 +19,26 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User implements UserDetails {
-
+public class User implements  UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 300, nullable = false)
+    @Column
     private String password;
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> order;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,6 +46,7 @@ public class User implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public String getUsername() {

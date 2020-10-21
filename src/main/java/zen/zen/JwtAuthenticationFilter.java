@@ -2,7 +2,9 @@ package zen.zen;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -30,7 +32,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             //securityContext에 authentication 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         }
         chain.doFilter(request,response);
     }
