@@ -25,11 +25,14 @@ public class UserController {
 
     @PostMapping("/api/register")
     public ResponseEntity register(@RequestBody Map<String, String> user) {
-                userRepository.save(User.builder()
+        System.out.println(user);
+
+        userRepository.save(User.builder()
                 .email(user.get("email"))
                 .password(passwordEncoder.encode(user.get("password")))
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build()).getId();
+
 
         return new ResponseEntity(true , HttpStatus.OK);
     }
