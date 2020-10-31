@@ -1,5 +1,4 @@
 
-
 spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/join2
@@ -19,6 +18,14 @@ spring:
           auth: true
           starttls:
             enable: true
+  devtools:
+    livereload:
+      enabled: true
+
+
+  mvc:
+    view:
+      prefix: 'static/**'
 
 
   jpa:
