@@ -68,7 +68,7 @@ public class DogController {
             @RequestParam("price") int price,
             @RequestParam("owner") Long id
             ){
-        File targetFile = new File("C://Users//user//Desktop//image//" + file.getOriginalFilename());
+        File targetFile = new File("upload/dogs/" + file.getOriginalFilename());
         try {
             InputStream fileStream = file.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);

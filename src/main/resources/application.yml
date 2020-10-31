@@ -24,8 +24,10 @@ spring:
 
 
   mvc:
-    view:
-      prefix: 'static/**'
+    resources:
+      mapping: /images/**
+      location: /static/images/
+
 
 
   jpa:
@@ -39,3 +41,7 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
+
+server:
+  servlet:
+    context-path: /
