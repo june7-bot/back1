@@ -1,19 +1,26 @@
 package zen.zen.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.UUID;
-
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(
+        name = "Dog.findOneList",
+        query = "select d from Dog d where d.status = :status")
+@NamedQuery(
+        name = "Dog.findByOwner",
+        query = "select d from Dog d where d.owner = :owner")
+@NamedQuery(
+        name = "Dog.findByOwnerOne",
+        query = "select d from Dog d where d.owner = :owner and d.status = :status")
+@NamedQuery(
+        name = "Dog.findByOwnerZero",
+        query = "select d from Dog d where d.owner = :owner and d.status = :status")
 public class Dog {
 
     @Id
@@ -21,10 +28,14 @@ public class Dog {
     private Long id;
 
     private String name;
-    private String price;
+    private int price;
+    private String photo;
+    private Long owner;
+    //private String nose;
+    //private String file;
 
-    private UUID nose;
-
-
+    @Enumerated(EnumType.STRING)
+    @Setter
+    private dogStatus status;
 
 }

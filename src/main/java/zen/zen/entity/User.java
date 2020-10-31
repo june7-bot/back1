@@ -1,9 +1,6 @@
 package zen.zen.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,20 +22,17 @@ public class User implements  UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column
     private String password;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> order;
+// 이름 추가 ???
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,5 +65,9 @@ public class User implements  UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void changePw(String pw) {
+        this.password = pw;
     }
 }
