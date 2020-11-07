@@ -63,25 +63,47 @@ public class DogController {
 
     @PostMapping(REGISTER)
     public Map<String, Object> upload(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("nose") MultipartFile nose,
+            @RequestParam("picture") MultipartFile photo,
+            @RequestParam("birth") MultipartFile birthFile,
             @RequestParam("name") String name,
             @RequestParam("price") int price,
             @RequestParam("owner") Long id
             ){
-        File targetFile = new File("C://Users//user//Desktop//image//" + file.getOriginalFilename());
+        File targetFile = new File("upload/dogs/" + nose.getOriginalFilename());
         try {
-            InputStream fileStream = file.getInputStream();
+            InputStream fileStream = photo.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
         } catch (IOException e) {
             FileUtils.deleteQuietly(targetFile);
+            e.printStackTrace();
+        }
+        System.out.println(photo.getOriginalFilename());
+        File targetFile1 = new File("upload/dogs/" + photo.getOriginalFilename());
+        try {
+            InputStream fileStream = nose.getInputStream();
+            FileUtils.copyInputStreamToFile(fileStream, targetFile1);
+        } catch (IOException e) {
+            FileUtils.deleteQuietly(targetFile1);
+            e.printStackTrace();
+        }
+
+        File targetFile2 = new File("upload/dogs/" + birthFile.getOriginalFilename());
+        try {
+            InputStream fileStream = birthFile.getInputStream();
+            FileUtils.copyInputStreamToFile(fileStream, targetFile2);
+        } catch (IOException e) {
+            FileUtils.deleteQuietly(targetFile2);
             e.printStackTrace();
         }
 
         dogService.saveDog(Dog.builder()
                 .name(name)
                 .price(price)
-                .photo(file.getOriginalFilename())
+                .photo(photo.getOriginalFilename())
                 .owner(id)
+                .nose(nose.getOriginalFilename())
+                .birthFile(birthFile.getOriginalFilename())
                 .status(dogStatus.ONE)
                 .build());
 

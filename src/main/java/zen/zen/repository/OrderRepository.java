@@ -24,9 +24,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "select count(*) from orders where buyer_id = ? or seller_id = ?", nativeQuery = true)
     int findTransactionCount(Long buy, Long sell);
 
-    @Query(value = "select * from orders where status = ? and seller_id = ?", nativeQuery = true)
-    List<Order> findProceedOrderSeller(String orderStatus , Long sellerId);
+    @Query(value = "select * from orders where status = ?", nativeQuery = true)
+    List<Order> findBlockList(String orderStatus);
 
-    @Query(value = "select * from orders where status = ? and buyer_id = ?", nativeQuery = true)
-    List<Order> findProceedOrderBuyer(String orderStatus , Long buyerId);
+//    @Query(value = "select * from orders where status = ?", nativeQuery = true)
+//    List<Order> findNotSaveInBc(String orderStatus);
+
+//    @Query(value = "select * from orders where status = ? and seller_id = ?", nativeQuery = true)
+//    List<Order> findProceedOrderSeller(String orderStatus , Long sellerId);
+//
+//    @Query(value = "select * from orders where status = ? and buyer_id = ?", nativeQuery = true)
+//    List<Order> findProceedOrderBuyer(String orderStatus , Long buyerId);
 }

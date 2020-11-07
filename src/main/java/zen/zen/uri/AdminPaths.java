@@ -32,7 +32,12 @@ public interface AdminPaths {
         public static interface transaction {
             public static final String TRANSACTION = Admin.PATH + "/transaction";
         }
-
+        public static interface blockchain {
+            public static final String BLOCKCHAIN = Admin.PATH + "/blockchain";
+        }
+        public static interface blockchainList {
+            public static final String BLOCKCHAINLIST = Admin.PATH + "/blockchain/list";
+        }
 
 
     }

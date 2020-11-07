@@ -123,47 +123,47 @@ public class MyPageController {
 
     }
 
-    @PostMapping(TRANSACTIONPROCEED)
-    public Map<String, Object> proceeding (@RequestBody Map<String , String> id) {
-        Optional<User> byEmail = userService.findByEmail(id.get("email"));
-        User user = byEmail.get();
-        Long userId = user.getId();
-
-
-        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(userId);
-        List<Order> proceedSeller = orderService.findProceedOrderSeller(userId);
-        List<TempDog> buyerList = new ArrayList<>();
-        List<TempDog> sellerList = new ArrayList<>();
-
-        for( int i = 0 ; i < proceedBuyer.size(); i++) {
-
-            TempDog tempBuyer = new TempDog(proceedBuyer.get(i).getDog().getName()
-                    ,proceedBuyer.get(i).getDog().getPrice()
-                    ,proceedBuyer.get(i).getDog().getPhoto() );
-
-            buyerList.add(tempBuyer);
-        }
-
-        for( int i = 0 ; i < proceedSeller.size(); i++) {
-            TempDog tempSeller = new TempDog(proceedSeller.get(i).getDog().getName()
-                    ,proceedSeller.get(i).getDog().getPrice()
-                    ,proceedSeller.get(i).getDog().getPhoto() );
-
-            sellerList.add(tempSeller);
-
-
-        }
-
-
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("success", true);
-        data.put("buyer" , buyerList);
-        data.put("seller" , sellerList);
-
-
-        return data;
-
-    }
+//    @PostMapping(TRANSACTIONPROCEED)
+//    public Map<String, Object> proceeding (@RequestBody Map<String , String> id) {
+//        Optional<User> byEmail = userService.findByEmail(id.get("email"));
+//        User user = byEmail.get();
+//        Long userId = user.getId();
+//
+//
+//        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(userId);
+//        List<Order> proceedSeller = orderService.findProceedOrderSeller(userId);
+//        List<TempDog> buyerList = new ArrayList<>();
+//        List<TempDog> sellerList = new ArrayList<>();
+//
+//        for( int i = 0 ; i < proceedBuyer.size(); i++) {
+//
+//            TempDog tempBuyer = new TempDog(proceedBuyer.get(i).getDog().getName()
+//                    ,proceedBuyer.get(i).getDog().getPrice()
+//                    ,proceedBuyer.get(i).getDog().getPhoto() );
+//
+//            buyerList.add(tempBuyer);
+//        }
+//
+//        for( int i = 0 ; i < proceedSeller.size(); i++) {
+//            TempDog tempSeller = new TempDog(proceedSeller.get(i).getDog().getName()
+//                    ,proceedSeller.get(i).getDog().getPrice()
+//                    ,proceedSeller.get(i).getDog().getPhoto() );
+//
+//            sellerList.add(tempSeller);
+//
+//
+//        }
+//
+//
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("success", true);
+//        data.put("buyer" , buyerList);
+//        data.put("seller" , sellerList);
+//
+//
+//        return data;
+//
+//    }
 
 }

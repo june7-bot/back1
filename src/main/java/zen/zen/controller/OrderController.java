@@ -23,7 +23,6 @@ public class OrderController {
         Long dogId = info.get("dogId");
         Long owner = dogService.findOneDog(dogId).getOwner();
 
-
         Map<String, Object> data = new HashMap<>();
         if(userId == owner)
         {

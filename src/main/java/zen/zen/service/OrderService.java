@@ -57,11 +57,19 @@ public class OrderService {
         return orderRepository.findTransactionCount(sell, buy);
     }
 
-    public List<Order> findProceedOrderBuyer(Long id ){
-        return orderRepository.findProceedOrderBuyer("PROCEEDING", id);
+    public List<Order> findBlockList() {
+
+        return orderRepository.findBlockList("BLOCK");
     }
 
-    public List<Order> findProceedOrderSeller(Long id ){
-        return orderRepository.findProceedOrderSeller("PROCEEDING", id);
-    }
+//    public List<Order> findNotSaveInBc(){
+//        return orderRepository.findNotSaveInBc("NOBLOCK");
+//    }
+//    public List<Order> findProceedOrderBuyer(Long id ){
+//        return orderRepository.findProceedOrderBuyer("PROCEEDING", id);
+//    }
+//
+//    public List<Order> findProceedOrderSeller(Long id ){
+//        return orderRepository.findProceedOrderSeller("PROCEEDING", id);
+//    }
 }

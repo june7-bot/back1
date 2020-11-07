@@ -31,8 +31,8 @@ public class Dog {
     private int price;
     private String photo;
     private Long owner;
-    //private String nose;
-    //private String file;
+    private String nose;
+    private String birthFile;
 
     @Enumerated(EnumType.STRING)
     @Setter

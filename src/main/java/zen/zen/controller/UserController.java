@@ -40,6 +40,8 @@ public class UserController {
     @PostMapping(REGISTER)
     public Map<String, Object> register(@RequestBody Map<String, String> user) {
 
+        System.out.println("?-----------------------------------------------------------------------------");
+
         if(user.get("email") == "ADMIN@naver.com"){
             userRepository.save(User.builder()
                     .email(user.get("email"))
@@ -58,7 +60,8 @@ public class UserController {
         return data;
     }
 
-    @PostMapping(LOGIN)
+//  LOGIN
+    @PostMapping("/api/user/login")
     public Map<String, Object> login(@RequestBody Map<String, String> user) {
         Map<String, Object> data = new HashMap<>();
         User member = userRepository.findByEmail(user.get("email"))
