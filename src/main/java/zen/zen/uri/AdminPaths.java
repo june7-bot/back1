@@ -36,9 +36,11 @@ public interface AdminPaths {
             public static final String BLOCKCHAIN = Admin.PATH + "/blockchain";
         }
         public static interface blockchainList {
-            public static final String BLOCKCHAINLIST = Admin.PATH + "/blockchain/list";
+            public static final String BLOCKCHAINLIST = Admin.PATH + "/blockchainlist";
         }
-
+        public static interface blockchainSuccess {
+            public static final String BLOCKCHAINSUCCESS = Admin.PATH + "/blockchainSuccess";
+        }
 
     }
 }

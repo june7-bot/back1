@@ -35,8 +35,17 @@ public interface MyPagePaths {
             public static final String PARCEL = MyPage.PATH + "/myparcel";
         }
 
+        public static interface cancel {
+            public static final String CANCEL = MyPage.PATH + "/cancel";
+        }
 
+        public static interface cancelbyseller {
+            public static final String CANCELBYSELLER = MyPage.PATH + "/cancelbyseller";
+        }
 
+        public static interface completetransaction {
+            public static final String COMPLETETRANSACTION = MyPage.PATH + "/completetransaction";
+        }
 
     }
 }

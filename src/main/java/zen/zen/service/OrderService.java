@@ -9,6 +9,10 @@ import zen.zen.repository.OrderRepository;
 import java.util.List;
 import java.util.Optional;
 
+import static zen.zen.entity.OrderStatus.BLOCKCHAINSUCCESS;
+import static zen.zen.entity.OrderStatus.COMPLETE;
+import static zen.zen.entity.dogStatus.ORDERING;
+import static zen.zen.entity.dogStatus.READY;
 
 
 @Service
@@ -23,7 +27,7 @@ public class OrderService {
     public Long order(Long userId, Long dogId) {
         User buyer = userService.findOne(userId);
         Dog dog = dogService.findOneDog(dogId);
-        dog.setStatus(dogStatus.ZERO);
+        dog.setStatus(ORDERING);
         Long seller = dog.getOwner();
         int price = dog.getPrice();
 
@@ -31,6 +35,22 @@ public class OrderService {
         orderRepository.save(order);
 
         return order.getId();
+    }
+
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.getOne(orderId);
+        order.getDog().setStatus(READY);
+        order.cancelOrder();
+    }
+
+    public void successOrder(Long orderId) {
+        Order order = orderRepository.getOne(orderId);
+        order.completeOrder();
+    }
+
+    public void blockchainSuccess(Long orderId) {
+        Order order = orderRepository.getOne(orderId);
+        order.blockchainSuccess();
     }
 
     public List<Order> findAll() {
@@ -50,26 +70,27 @@ public class OrderService {
     }
 
     public List<Order> findListByJoinFetch() {
-        return orderRepository.findAllJoinFetch();
+        return orderRepository.findAllJoinFetch(COMPLETE);
     }
 
     public int findTransactionCount(Long sell, Long buy) {
         return orderRepository.findTransactionCount(sell, buy);
     }
 
-    public List<Order> findBlockList() {
-
-        return orderRepository.findBlockList("BLOCK");
+    public List<Order> findAllBlock(){
+        return orderRepository.findAllBlocks(BLOCKCHAINSUCCESS);
     }
 
-//    public List<Order> findNotSaveInBc(){
-//        return orderRepository.findNotSaveInBc("NOBLOCK");
-//    }
-//    public List<Order> findProceedOrderBuyer(Long id ){
-//        return orderRepository.findProceedOrderBuyer("PROCEEDING", id);
-//    }
-//
-//    public List<Order> findProceedOrderSeller(Long id ){
-//        return orderRepository.findProceedOrderSeller("PROCEEDING", id);
-//    }
+    public List<Order> findProceedOrderBuyer(Long id ){
+        return orderRepository.findProceedOrderBuyer("ORDER", id);
+    }
+
+    public List<Order> findProceedOrderSeller(Long id ){
+        return orderRepository.findProceedOrderSeller("ORDER", id);
+    }
+
+    public Order findOrderByDogId(Long id ){
+        return orderRepository.findOrderByDogId(id);
+    }
+
 }

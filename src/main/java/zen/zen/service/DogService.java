@@ -10,6 +10,9 @@ import zen.zen.repository.DogRepository;
 import java.util.List;
 import java.util.Optional;
 
+import static zen.zen.entity.dogStatus.READY;
+import static zen.zen.entity.dogStatus.SELL;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class DogService {
     }
 
     public List<Dog> findOkList(){
-        return dogRepository.findOneList(dogStatus.ONE);
+        return dogRepository.findOneList(READY);
     }
 
     public List<Dog> findAllDog() {
@@ -39,7 +42,7 @@ public class DogService {
 
     public List<Dog> findByOwner(Long id){  return dogRepository.findByOwner(id);}
 
-    public List<Dog> findByOwnerOne(Long id){  return dogRepository.findByOwnerOne(id, dogStatus.ONE);}
-    public List<Dog> findByOwnerZero(Long id){  return dogRepository.findByOwnerZero(id, dogStatus.ZERO);}
+    public List<Dog> findByOwnerOne(Long id){  return dogRepository.findByOwnerOne(id, READY);}
+    public List<Dog> findByOwnerZero(Long id){  return dogRepository.findByOwnerZero(id, SELL);}
 
 }

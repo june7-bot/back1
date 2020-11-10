@@ -5,13 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import zen.zen.JwtTokenProvider;
 import zen.zen.entity.Dog;
-import zen.zen.entity.User;
-import zen.zen.entity.dogStatus;
-import zen.zen.service.CustomUserDetailService;
 import zen.zen.service.DogService;
-import zen.zen.uri.DogPaths;
 
 import java.io.*;
 import java.util.HashMap;
@@ -19,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static zen.zen.entity.dogStatus.READY;
 import static zen.zen.uri.DogPaths.Dog.list.LIST;
 import static zen.zen.uri.DogPaths.Dog.register.*;
-import static zen.zen.uri.DogPaths.nose.NOSE;
 import static zen.zen.uri.DogPaths.one.ONE;
 
 @RestController
@@ -29,8 +24,6 @@ import static zen.zen.uri.DogPaths.one.ONE;
 public class DogController {
 
     private final DogService dogService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailService userService;
 
     @PostMapping(LIST)
     public Map<String, Object> DogList() {
@@ -43,10 +36,6 @@ public class DogController {
 
     }
 
-
-    @PostMapping(NOSE)
-    public  void makeDogNose() {
-    }
 
     @PostMapping(ONE)
     public Map<String, Object> oneDog(@RequestBody Map<String, Long> id) {
@@ -68,7 +57,11 @@ public class DogController {
             @RequestParam("birth") MultipartFile birthFile,
             @RequestParam("name") String name,
             @RequestParam("price") int price,
-            @RequestParam("owner") Long id
+            @RequestParam("owner") Long id,
+            @RequestParam("kind") String kind,
+            @RequestParam("gender") String gender,
+            @RequestParam("prevent") String prevent,
+            @RequestParam("age") int age
             ){
         File targetFile = new File("upload/dogs/" + nose.getOriginalFilename());
         try {
@@ -103,8 +96,12 @@ public class DogController {
                 .photo(photo.getOriginalFilename())
                 .owner(id)
                 .nose(nose.getOriginalFilename())
+                .dogKind(kind)
+                .dogGender(gender)
+                .dogPrevent(prevent)
+                .dogAge(age)
                 .birthFile(birthFile.getOriginalFilename())
-                .status(dogStatus.ONE)
+                .status(READY)
                 .build());
 
         Map<String, Object> data = new HashMap<>();

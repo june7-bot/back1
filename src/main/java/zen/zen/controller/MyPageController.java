@@ -20,6 +20,9 @@ import zen.zen.uri.MyPagePaths;
 import java.util.*;
 
 import static zen.zen.uri.MyPagePaths.MyPage.adopt.ADOPT;
+import static zen.zen.uri.MyPagePaths.MyPage.cancel.CANCEL;
+import static zen.zen.uri.MyPagePaths.MyPage.cancelbyseller.CANCELBYSELLER;
+import static zen.zen.uri.MyPagePaths.MyPage.completetransaction.COMPLETETRANSACTION;
 import static zen.zen.uri.MyPagePaths.MyPage.myPage.MYPAGE;
 import static zen.zen.uri.MyPagePaths.MyPage.parcel.PARCEL;
 import static zen.zen.uri.MyPagePaths.MyPage.transactionProceed.TRANSACTIONPROCEED;
@@ -37,14 +40,14 @@ public class MyPageController {
     private final OrderService orderService;
 
     @PostMapping(MYPAGE)
-    public Map<String, Object> myPage(@RequestHeader(value = "X-AUTH-TOKEN")String token) {
+    public Map<String, Object> myPage(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> fail = new HashMap<>();
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String email = jwtTokenProvider.getUserEmail(token);
 
-            data.put("success", true );
+            data.put("success", true);
             data.put("email", email);
             return data;
         }
@@ -52,9 +55,10 @@ public class MyPageController {
         fail.put("success", false);
         return fail;
     }
-//
+
+    //
     @PostMapping(USERINFOCHANGE)
-    public Map<String , Object> userInfoChange(@RequestBody Map<String , String> info) {
+    public Map<String, Object> userInfoChange(@RequestBody Map<String, String> info) {
 
         Optional<User> OptUser = userRepository.findByEmail(info.get("id"));
         User user = OptUser.get();
@@ -83,7 +87,7 @@ public class MyPageController {
     @PostMapping(ADOPT)
     public Map<String, Object> adopt(@RequestBody() Map<String, String> id) {
         Optional<User> user = userService.findByEmail(id.get("id"));
-        Long userId =  user.get().getId();
+        Long userId = user.get().getId();
 
         List<Dog> dogOne = dogService.findByOwnerOne(userId);
         List<Dog> dogZero = dogService.findByOwnerZero(userId);
@@ -105,10 +109,10 @@ public class MyPageController {
     public Map<String, Object> parcel(@RequestBody() Map<String, String> id) {
 
         Optional<User> user = userService.findByEmail(id.get("id"));
-        Long userId =  user.get().getId();
+        Long userId = user.get().getId();
 
         List<Long> dogId = orderService.findDogByPurchaser(userId);
-         List <Dog> dogs = new ArrayList<>();
+        List<Dog> dogs = new ArrayList<>();
 
 
         for (int i = 0; i < dogId.size(); i++) {
@@ -123,47 +127,143 @@ public class MyPageController {
 
     }
 
-//    @PostMapping(TRANSACTIONPROCEED)
-//    public Map<String, Object> proceeding (@RequestBody Map<String , String> id) {
-//        Optional<User> byEmail = userService.findByEmail(id.get("email"));
-//        User user = byEmail.get();
-//        Long userId = user.getId();
-//
-//
-//        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(userId);
-//        List<Order> proceedSeller = orderService.findProceedOrderSeller(userId);
-//        List<TempDog> buyerList = new ArrayList<>();
-//        List<TempDog> sellerList = new ArrayList<>();
-//
-//        for( int i = 0 ; i < proceedBuyer.size(); i++) {
-//
-//            TempDog tempBuyer = new TempDog(proceedBuyer.get(i).getDog().getName()
-//                    ,proceedBuyer.get(i).getDog().getPrice()
-//                    ,proceedBuyer.get(i).getDog().getPhoto() );
-//
-//            buyerList.add(tempBuyer);
-//        }
-//
-//        for( int i = 0 ; i < proceedSeller.size(); i++) {
-//            TempDog tempSeller = new TempDog(proceedSeller.get(i).getDog().getName()
-//                    ,proceedSeller.get(i).getDog().getPrice()
-//                    ,proceedSeller.get(i).getDog().getPhoto() );
-//
-//            sellerList.add(tempSeller);
-//
-//
-//        }
-//
-//
-//
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("success", true);
-//        data.put("buyer" , buyerList);
-//        data.put("seller" , sellerList);
-//
-//
-//        return data;
-//
-//    }
+    @PostMapping(TRANSACTIONPROCEED)
+    public Map<String, Object> proceeding(@RequestBody Map<String, String> id) {
+        Optional<User> byEmail = userService.findByEmail(id.get("email"));
+        User user = byEmail.get();
+        Long userId = user.getId();
 
+        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(userId);
+        List<Order> proceedSeller = orderService.findProceedOrderSeller(userId);
+        List<TempDog> buyerList = new ArrayList<>();
+        List<TempDog> sellerList = new ArrayList<>();
+
+        for (int i = 0; i < proceedBuyer.size(); i++) {
+
+            TempDog tempBuyer = new TempDog(
+                    proceedBuyer.get(i).getId()
+                    , proceedBuyer.get(i).getDog().getName()
+                    , proceedBuyer.get(i).getDog().getPrice()
+                    , proceedBuyer.get(i).getDog().getPhoto()
+
+            );
+
+            buyerList.add(tempBuyer);
+        }
+
+        for (int i = 0; i < proceedSeller.size(); i++) {
+            TempDog tempSeller = new TempDog(
+                    proceedSeller.get(i).getId()
+                    , proceedSeller.get(i).getDog().getName()
+                    , proceedSeller.get(i).getDog().getPrice()
+                    , proceedSeller.get(i).getDog().getPhoto()
+
+            );
+
+            sellerList.add(tempSeller);
+
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("success", true);
+        data.put("buyer", buyerList);
+        data.put("seller", sellerList);
+
+        return data;
+
+    }
+
+
+    @PostMapping(CANCEL)
+    public Map<String, Object> cancel(@RequestBody() Map<String, Long> input) {
+
+        Long orderId = input.get("id");
+        Optional<Order> order = orderService.findOrder(orderId);
+        Long buyerId = order.get().getUser().getId();
+        orderService.cancelOrder(orderId);
+
+        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(buyerId);
+        List<TempDog> buyerList = new ArrayList<>();
+
+        for (int i = 0; i < proceedBuyer.size(); i++) {
+
+            TempDog tempBuyer = new TempDog(
+                    proceedBuyer.get(i).getId()
+                    , proceedBuyer.get(i).getDog().getName()
+                    , proceedBuyer.get(i).getDog().getPrice()
+                    , proceedBuyer.get(i).getDog().getPhoto()
+
+            );
+
+            buyerList.add(tempBuyer);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("success", true);
+        data.put("buyer", buyerList);
+
+        return data;
+    }
+
+
+    @PostMapping(CANCELBYSELLER)
+    public Map<String, Object> cancelBySeller(@RequestBody() Map<String, Long> input) {
+
+        Long orderId = input.get("id");
+        Optional<Order> order = orderService.findOrder(orderId);
+        Long sellerId = order.get().getSellerId();
+        orderService.cancelOrder(orderId);
+
+        List<Order> proceedSeller = orderService.findProceedOrderSeller(sellerId);
+        List<TempDog> sellerList = new ArrayList<>();
+
+        for (int i = 0; i < proceedSeller.size(); i++) {
+            TempDog tempSeller = new TempDog(
+                    proceedSeller.get(i).getId()
+                    , proceedSeller.get(i).getDog().getName()
+                    , proceedSeller.get(i).getDog().getPrice()
+                    , proceedSeller.get(i).getDog().getPhoto()
+
+            );
+            sellerList.add(tempSeller);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("success", true);
+        data.put("seller", sellerList);
+
+        return data;
+    }
+
+    @PostMapping(COMPLETETRANSACTION)
+    public Map<String, Object> completeTransaction(@RequestBody() Map<String, Long> input) {
+
+        Long orderId = input.get("id");
+        Optional<Order> order = orderService.findOrder(orderId);
+        Long buyerId = order.get().getUser().getId();
+        orderService.successOrder(order.get().getId());
+
+        List<Order> proceedBuyer = orderService.findProceedOrderBuyer(buyerId);
+        List<TempDog> buyerList = new ArrayList<>();
+
+        for (int i = 0; i < proceedBuyer.size(); i++) {
+
+            TempDog tempBuyer = new TempDog(
+                    proceedBuyer.get(i).getId()
+                    , proceedBuyer.get(i).getDog().getName()
+                    , proceedBuyer.get(i).getDog().getPrice()
+                    , proceedBuyer.get(i).getDog().getPhoto()
+
+            );
+
+            buyerList.add(tempBuyer);
+        }
+
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("success", true);
+        data.put("buyer", buyerList);
+
+        return data;
+    }
 }

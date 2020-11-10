@@ -3,13 +3,16 @@ import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 
-import static zen.zen.entity.OrderStatus.BLOCK;
-import static zen.zen.entity.OrderStatus.NOBLOCK;
+import static zen.zen.entity.OrderStatus.*;
+import static zen.zen.entity.dogStatus.SELL;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "orders")
+@NamedQuery(
+        name = "Order.findAllBlock",
+        query = "select o from Order o join fetch o.user join fetch o.dog where o.status = :status")
 public class Order {
 
     @Id @GeneratedValue
@@ -28,9 +31,9 @@ public class Order {
     private int orderPrice;
     
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus status = READY;
 
-    //주문생성
+
     public static Order createOrder(User buyer,Long seller , Dog dog, int price) {
 
         Order order = new Order();
@@ -38,24 +41,47 @@ public class Order {
         order.setSellerId(seller);
         order.setDog(dog);
         order.setOrderPrice(price);
-        order.setStatus(NOBLOCK);
+        order.setStatus(ORDER);
 
         return order;
 
     }
 
-    public void createBlock() {
-        this.setStatus(BLOCK);
+    public void completeOrder() {
+
+        if (status == COMPLETE) {
+            throw new IllegalStateException("이미 입양 완료된 강아지입니다.");
+        }
+        this.dog.setStatus(SELL);
+        this.setStatus(COMPLETE);
     }
 
 
-    //연관관계
+    public void cancelOrder() {
+
+        if (status == COMPLETE) {
+            throw new IllegalStateException("이미 입양 완료된 강아지입니다.");
+        }
+        this.setStatus(READY);
+    }
+
+
+    public void blockchainSuccess() {
+
+        if (status == BLOCKCHAINSUCCESS) {
+            throw new IllegalStateException("이미 블록체인에 저장된 거래입니다.");
+        }
+        this.setStatus(BLOCKCHAINSUCCESS);
+
+
+    }
+
     public void setUser(User user) {
         this.user = user;
-
     }
 
     public void setDog(Dog dog) {
         this.dog = dog;
     }
 }
+

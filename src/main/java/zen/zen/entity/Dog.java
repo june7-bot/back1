@@ -33,6 +33,10 @@ public class Dog {
     private Long owner;
     private String nose;
     private String birthFile;
+    private String dogKind;
+    private String dogGender;
+    private String dogPrevent;
+    private int dogAge;
 
     @Enumerated(EnumType.STRING)
     @Setter

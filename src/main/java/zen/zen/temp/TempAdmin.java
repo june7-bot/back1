@@ -3,6 +3,7 @@ package zen.zen.temp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import zen.zen.entity.OrderStatus;
 
 @Getter
 @Setter
@@ -13,4 +14,6 @@ public class TempAdmin {
     private String buyer;
     private Long dogId;
     private int price;
+    private OrderStatus orderStatus;
+
 }

@@ -15,14 +15,14 @@ import zen.zen.temp.FileManager;
 import zen.zen.temp.TempAdmin;
 import zen.zen.temp.TempUser;
 import zen.zen.uri.AdminPaths;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-import static zen.zen.entity.OrderStatus.BLOCK;
+import static zen.zen.entity.OrderStatus.COMPLETE;
 import static zen.zen.uri.AdminPaths.Admin.blockchain.BLOCKCHAIN;
 import static zen.zen.uri.AdminPaths.Admin.blockchainList.BLOCKCHAINLIST;
+import static zen.zen.uri.AdminPaths.Admin.blockchainSuccess.BLOCKCHAINSUCCESS;
 import static zen.zen.uri.AdminPaths.Admin.home.HOME;
 import static zen.zen.uri.AdminPaths.Admin.seeUser.ALLUSER;
 import static zen.zen.uri.AdminPaths.Admin.transaction.TRANSACTION;
@@ -93,7 +93,9 @@ public class AdminController {
                     userRepository.getOne(allOrder.get(i).getSellerId()).getEmail(),
                     allOrder.get(i).getUser().getEmail(),
                     allOrder.get(i).getDog().getId(),
-                    allOrder.get(i).getDog().getPrice()
+                    allOrder.get(i).getDog().getPrice(),
+                    allOrder.get(i).getStatus()
+
             );
             temp.add(t);
         }
@@ -107,7 +109,7 @@ public class AdminController {
 
     @PostMapping(BLOCKCHAIN)
     public Map<String, Object> blockchain(@RequestBody() Map<String , Long> input ) {
-        // String hash = hashFile.getHash(filePath);
+
         String birthFile;
         String dogNose;
         String buyerInfo;
@@ -117,9 +119,8 @@ public class AdminController {
         Optional<Order> oOrder = orderService.findOrder(input.get("id"));
         Order order = oOrder.get();
 
-        if(order.getStatus() != BLOCK ){
+        if(order.getStatus() == COMPLETE ){
 
-            orderService.findOrder(order.getId()).get().createBlock();
             birthFile = order.getDog().getBirthFile();
             dogNose = order.getDog().getNose();
             buyerInfo = order.getUser().getEmail();
@@ -130,41 +131,38 @@ public class AdminController {
             data.put("buyerInfo", buyerInfo);
         }
         else {
-            data.put("success", false);
+            throw new IllegalStateException("이미 블록체인화 된 데이터입니다");
+//            data.put("success", false);
               }
         return data;
 
     }
+
+    @PostMapping(BLOCKCHAINSUCCESS)
+    public Map<String, Object> blockchainSuccess(@RequestBody() Map<String , Long> input ) {
+        Optional<Order> oOrder = orderService.findOrder(input.get("id"));
+        Order order = oOrder.get();
+        Long orderId = order.getId();
+
+        orderService.blockchainSuccess(orderId);
+        Map<String, Object> data =new HashMap<>();
+        data.put("success", true);
+
+        return data;
+
+    }
+
     @PostMapping(BLOCKCHAINLIST)
     public Map<String, Object> blockChainList(){
 
         Map<String, Object> data = new HashMap<>();
-        List<Order> orders = orderService.findBlockList();
+        List<Order> order = orderService.findAllBlock();
+
         data.put("success", true);
-        data.put("list", orders);
+        data.put("list", order);
 
         return data;
     }
 }
-//        Map<String, String> data = new HashMap<>();
-//
-//        List<Order> notSaveInBc = orderService.findNotSaveInBc();
-//        for (Order order : notSaveInBc) {
-//            if (order.getStatus() != BLOCK) {
-//                order.setStatus(BLOCK);
-//                birthFile = order.getDog().getBirthFile();
-//                dogNose = order.getDog().getNose();
-//                buyerInfo = order.getUser().getEmail();
-//
-//                data.put("birthFile", birthFile);
-//                data.put("dogNose", dogNose);
-//                data.put("buyerInfo", buyerInfo);
-//
-//
-//            }
-//        }
-//        return data;
-//    }
-
 
 
