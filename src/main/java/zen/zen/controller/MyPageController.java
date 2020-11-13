@@ -70,20 +70,6 @@ public class MyPageController {
         return data;
     }
 
-
-//    @PostMapping(MYWRITE)
-//    public Map<String, Object> myPetInfo(@RequestBody() Map<String, String> id ) {
-//        Optional<User> user = userService.findByEmail(id.get("id"));
-//        Long userId =  user.get().getId();
-//        List<Dog> dogs = dogService.findByOwner(userId);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("success", true);
-//        data.put("list", dogs);
-//
-//        return data;
-//
-//    }
-
     @PostMapping(ADOPT)
     public Map<String, Object> adopt(@RequestBody() Map<String, String> id) {
         Optional<User> user = userService.findByEmail(id.get("id"));

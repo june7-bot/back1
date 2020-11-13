@@ -20,6 +20,7 @@ public class DogService {
 
     private final DogRepository dogRepository;
 
+
     public void saveDog(Dog dog) {
         dogRepository.save(dog);
     }
@@ -36,6 +37,11 @@ public class DogService {
         return dogRepository.findOneList(READY);
     }
 
+    public String checkSize(String check) {
+        Dog dog = new Dog();
+        return dog.checkSize(check);
+    }
+
     public List<Dog> findAllDog() {
         return dogRepository.findAll();
     }
@@ -45,4 +51,18 @@ public class DogService {
     public List<Dog> findByOwnerOne(Long id){  return dogRepository.findByOwnerOne(id, READY);}
     public List<Dog> findByOwnerZero(Long id){  return dogRepository.findByOwnerZero(id, SELL);}
 
+    public List<Dog> findAllSmallDog() { return  dogRepository.findAllSmallDog("SMALL");}
+    public List<Dog> findAllMidDog() { return  dogRepository.findAllMidDog("MID");}
+    public List<Dog> findAllBigDog() { return  dogRepository.findAllBigDog("BIG");}
+
+    public List<Dog> findSmallDogsByKind (int kindNum){
+        Dog dog = new Dog();
+        return dogRepository.findAllDogKind(dog.checkSmallKind(kindNum));}
+
+    public List<Dog> findMidDogsByKind (int kindNum){
+        Dog dog = new Dog();
+        return dogRepository.findAllDogKind(dog.checkMidKind(kindNum));}
+    public List<Dog> findBigDogsByKind (int kindNum){
+        Dog dog = new Dog();
+        return dogRepository.findAllDogKind(dog.checkMidKind(kindNum));}
 }

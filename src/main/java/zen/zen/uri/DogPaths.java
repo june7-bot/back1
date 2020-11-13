@@ -32,5 +32,13 @@ public interface DogPaths {
     public static interface one {
         public static final String ONE = Dog.PATH + "/one";
     }
-
+    public static interface small {
+        public static final String SMALL = Dog.PATH + "/small";
+    }
+    public static interface mid {
+        public static final String MID = Dog.PATH + "/mid";
+    }
+    public static interface big {
+        public static final String BIG = Dog.PATH + "/big";
+    }
 }
