@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import zen.zen.JwtTokenProvider;
+import zen.zen.blockchain.BlockChain;
 import zen.zen.entity.Dog;
 import zen.zen.entity.Order;
 import zen.zen.entity.User;
@@ -14,6 +15,7 @@ import zen.zen.repository.UserRepository;
 import zen.zen.service.CustomUserDetailService;
 import zen.zen.service.DogService;
 import zen.zen.service.OrderService;
+import zen.zen.temp.FileManager;
 import zen.zen.temp.TempDog;
 import zen.zen.uri.MyPagePaths;
 
@@ -38,6 +40,7 @@ public class MyPageController {
     private final PasswordEncoder passwordEncoder;
     private final DogService dogService;
     private final OrderService orderService;
+    private final BlockChain blockChain;
 
     @PostMapping(MYPAGE)
     public Map<String, Object> myPage(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
@@ -56,7 +59,6 @@ public class MyPageController {
         return fail;
     }
 
-    //
     @PostMapping(USERINFOCHANGE)
     public Map<String, Object> userInfoChange(@RequestBody Map<String, String> info) {
 
@@ -89,7 +91,6 @@ public class MyPageController {
 
         return data;
     }
-
 
     @PostMapping(PARCEL)
     public Map<String, Object> parcel(@RequestBody() Map<String, String> id) {
@@ -159,7 +160,6 @@ public class MyPageController {
 
     }
 
-
     @PostMapping(CANCEL)
     public Map<String, Object> cancel(@RequestBody() Map<String, Long> input) {
 
@@ -222,12 +222,22 @@ public class MyPageController {
     }
 
     @PostMapping(COMPLETETRANSACTION)
-    public Map<String, Object> completeTransaction(@RequestBody() Map<String, Long> input) {
+    public Map<String, Object> completeTransaction(@RequestBody() Map<String, Long> input) throws Exception {
 
         Long orderId = input.get("id");
         Optional<Order> order = orderService.findOrder(orderId);
         Long buyerId = order.get().getUser().getId();
+
         orderService.successOrder(order.get().getId());
+
+        String dogBirth = order.get().getDog().getBirthFile();
+        String dogNose = FileManager.getHash(order.get().getDog().getNose());
+
+        if(blockChain.setBlockchain(orderId , dogBirth , dogNose)){
+            orderService.blockchainSuccess(orderId);
+        }else {
+            throw new IllegalStateException("blockchain fail");
+        }
 
         List<Order> proceedBuyer = orderService.findProceedOrderBuyer(buyerId);
         List<TempDog> buyerList = new ArrayList<>();

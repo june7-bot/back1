@@ -12,7 +12,7 @@ public class FileManager {
 
     public static String getHash(String path) throws IOException, NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-        FileInputStream fileInputStream = new FileInputStream(path);
+        FileInputStream fileInputStream = new FileInputStream("D:/back1/upload/dogs/" + path);
         byte[] dataBytes = new byte[1024];
         Integer nRead = 0;
         while((nRead = fileInputStream.read(dataBytes)) != -1) {
@@ -25,5 +25,4 @@ public class FileManager {
         }
         return stringBuffer.toString();
     }
-
 }

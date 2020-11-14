@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zen.zen.entity.Dog;
-import zen.zen.entity.dogStatus;
 import zen.zen.repository.DogRepository;
 
 import java.util.List;

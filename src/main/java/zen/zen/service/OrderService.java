@@ -9,8 +9,7 @@ import zen.zen.repository.OrderRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static zen.zen.entity.OrderStatus.BLOCKCHAINSUCCESS;
-import static zen.zen.entity.OrderStatus.COMPLETE;
+import static zen.zen.entity.OrderStatus.*;
 import static zen.zen.entity.dogStatus.ORDERING;
 import static zen.zen.entity.dogStatus.READY;
 
@@ -70,7 +69,7 @@ public class OrderService {
     }
 
     public List<Order> findListByJoinFetch() {
-        return orderRepository.findAllJoinFetch(COMPLETE);
+        return orderRepository.findAllJoinFetch(BLOCKCHAINSUCCESS, ORDER);
     }
 
     public int findTransactionCount(Long sell, Long buy) {

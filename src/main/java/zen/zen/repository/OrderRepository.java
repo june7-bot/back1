@@ -18,8 +18,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "select dog_id from orders where buyer_id = ?", nativeQuery = true)
     List<Long> findDogByPurchaser(Long purchaserId);
 
-    @Query("select o from Order o join fetch o.user join fetch o.dog where o.status = :status ")
-    List<Order> findAllJoinFetch(@Param("status") OrderStatus orderStatus);
+    @Query("select o from Order o join fetch o.user join fetch o.dog where o.status in (:status, :status1)")
+    List<Order> findAllJoinFetch(@Param("status") OrderStatus orderStatus, @Param("status1") OrderStatus orderStatus1);
 
     @Query(value = "select count(*) from orders where buyer_id = ? or seller_id = ?", nativeQuery = true)
     int findTransactionCount(Long buy, Long sell);

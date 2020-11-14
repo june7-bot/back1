@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import zen.zen.blockchain.BlockChain;
 import zen.zen.entity.Order;
 import zen.zen.entity.OrderStatus;
 import zen.zen.entity.User;
@@ -13,6 +14,7 @@ import zen.zen.service.CustomUserDetailService;
 import zen.zen.service.OrderService;
 import zen.zen.temp.FileManager;
 import zen.zen.temp.TempAdmin;
+import zen.zen.temp.TempBlock;
 import zen.zen.temp.TempUser;
 import zen.zen.uri.AdminPaths;
 import java.io.IOException;
@@ -35,11 +37,7 @@ public class AdminController {
     private final UserRepository userRepository;
     private final CustomUserDetailService userService;
     private final FileManager hashFile;
-
-
-    @PostMapping(HOME)
-    public void admin() {
-    }
+    private final BlockChain blockChain;
 
     @PostMapping(ALLUSER)
     public Map<String, Object> findUser() {
@@ -69,16 +67,13 @@ public class AdminController {
                     temp.add(tempUser);
                 }
             }
-
         }
-
         Map<String, Object> data = new HashMap<>();
         data.put("success", true);
         data.put("list", temp);
 
         return data;
     }
-
 
     @PostMapping(TRANSACTION)
     public Map<String, Object> transaction() {
@@ -106,37 +101,37 @@ public class AdminController {
         return data;
 
     }
-
-    @PostMapping(BLOCKCHAIN)
-    public Map<String, Object> blockchain(@RequestBody() Map<String , Long> input ) {
-
-        String birthFile;
-        String dogNose;
-        String buyerInfo;
-
-        Map<String, Object> data = new HashMap<>();
-
-        Optional<Order> oOrder = orderService.findOrder(input.get("id"));
-        Order order = oOrder.get();
-
-        if(order.getStatus() == COMPLETE ){
-
-            birthFile = order.getDog().getBirthFile();
-            dogNose = order.getDog().getNose();
-            buyerInfo = order.getUser().getEmail();
-
-            data.put("success", true);
-            data.put("birthFile", birthFile);
-            data.put("dogNose", dogNose);
-            data.put("buyerInfo", buyerInfo);
-        }
-        else {
-            throw new IllegalStateException("이미 블록체인화 된 데이터입니다");
-//            data.put("success", false);
-              }
-        return data;
-
-    }
+//프론트용 블록체인
+//    @PostMapping(BLOCKCHAIN)
+//    public Map<String, Object> blockchain(@RequestBody() Map<String , Long> input ) {
+//
+//        String birthFile;
+//        String dogNose;
+//        String buyerInfo;
+//
+//        Map<String, Object> data = new HashMap<>();
+//
+//        Optional<Order> oOrder = orderService.findOrder(input.get("id"));
+//        Order order = oOrder.get();
+//
+//        if(order.getStatus() == COMPLETE ){
+//
+//            birthFile = order.getDog().getBirthFile();
+//            dogNose = order.getDog().getNose();
+//            buyerInfo = order.getUser().getEmail();
+//
+//            data.put("success", true);
+//            data.put("birthFile", birthFile);
+//            data.put("dogNose", dogNose);
+//            data.put("buyerInfo", buyerInfo);
+//        }
+//        else {
+//            throw new IllegalStateException("이미 블록체인화 된 데이터입니다");
+////            data.put("success", false);
+//              }
+//        return data;
+//
+//    }
 
     @PostMapping(BLOCKCHAINSUCCESS)
     public Map<String, Object> blockchainSuccess(@RequestBody() Map<String , Long> input ) {
@@ -153,13 +148,21 @@ public class AdminController {
     }
 
     @PostMapping(BLOCKCHAINLIST)
-    public Map<String, Object> blockChainList(){
+    public Map<String, Object> blockChainList() throws Exception {
 
         Map<String, Object> data = new HashMap<>();
         List<Order> order = orderService.findAllBlock();
+        List<TempBlock> list = new ArrayList<>();
+
+        for (Order blocks : order) {
+            TempBlock temp = blockChain.getBlockchain(blocks.getId());
+            System.out.println( temp.getDogNose() + " " + temp.getDogBirth());
+            TempBlock blockchain = new TempBlock(temp.getOrderId() , temp.getDogNose() , temp.getDogBirth());
+            list.add(blockchain);
+        }
 
         data.put("success", true);
-        data.put("list", order);
+        data.put("list", list);
 
         return data;
     }

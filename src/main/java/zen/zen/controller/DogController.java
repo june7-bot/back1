@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import zen.zen.entity.Dog;
 import zen.zen.service.DogService;
-import zen.zen.uri.DogPaths;
 
 import java.io.*;
 import java.util.HashMap;
