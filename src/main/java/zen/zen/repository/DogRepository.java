@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import zen.zen.entity.Dog;
-import zen.zen.entity.Order;
-import zen.zen.entity.OrderStatus;
 import zen.zen.entity.dogStatus;
 
 import java.util.List;

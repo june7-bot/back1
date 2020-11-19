@@ -17,7 +17,6 @@ import zen.zen.service.DogService;
 import zen.zen.service.OrderService;
 import zen.zen.temp.FileManager;
 import zen.zen.temp.TempDog;
-import zen.zen.uri.MyPagePaths;
 
 import java.util.*;
 
@@ -232,6 +231,8 @@ public class MyPageController {
 
         String dogBirth = order.get().getDog().getBirthFile();
         String dogNose = FileManager.getHash(order.get().getDog().getNose());
+
+
 
         if(blockChain.setBlockchain(orderId , dogBirth , dogNose)){
             orderService.blockchainSuccess(orderId);

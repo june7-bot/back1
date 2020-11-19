@@ -156,10 +156,10 @@ public class AdminController {
 
         for (Order blocks : order) {
             TempBlock temp = blockChain.getBlockchain(blocks.getId());
-            System.out.println( temp.getDogNose() + " " + temp.getDogBirth());
             TempBlock blockchain = new TempBlock(temp.getOrderId() , temp.getDogNose() , temp.getDogBirth());
             list.add(blockchain);
         }
+
 
         data.put("success", true);
         data.put("list", list);

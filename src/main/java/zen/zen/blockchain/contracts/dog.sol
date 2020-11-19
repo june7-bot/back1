@@ -7,7 +7,7 @@ contract Dog {
         string photo; 
     }
 
-    mapping(uint256 => Student ) dogInfo;
+    mapping(uint256 => Student ) public dogInfo;
 
     function setStudentInfo ( uint _dogId, string  memory _name, string  memory _photo) public{
         Student storage student = dogInfo[_dogId];

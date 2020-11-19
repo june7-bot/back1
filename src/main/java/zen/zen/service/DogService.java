@@ -63,5 +63,5 @@ public class DogService {
         return dogRepository.findAllDogKind(dog.checkMidKind(kindNum));}
     public List<Dog> findBigDogsByKind (int kindNum){
         Dog dog = new Dog();
-        return dogRepository.findAllDogKind(dog.checkMidKind(kindNum));}
+        return dogRepository.findAllDogKind(dog.checkBigKind(kindNum));}
 }
